@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "bierner.github-markdown-preview",
+    "davidanson.vscode-markdownlint",
+    "github.copilot-chat",
+    "github.copilot",
+    "streetsidesoftware.code-spell-checker",
+    "tyriar.sort-lines",
+    "wengerk.highlight-bad-chars",
+    "yzhang.markdown-all-in-one"
+  ]
+}
