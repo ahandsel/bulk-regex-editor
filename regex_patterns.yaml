@@ -1,0 +1,324 @@
+# Regex Patterns Configuration File
+# Use `\\` to escape
+
+# Company Names
+
+- name: Kintone
+  pattern: "(?i)(\\bkim\\s{0,1}(jong|chon|ta)\\b)|(\\bcantone?\\b)|(\\bken(jon|to|ton|tone)\\b)|(\\b[as]?kintonen?\\b)|(\\bking? (tone|kong)\\b)|(\\b(k?kin(dle|etone|tem|ter|to|tome|ton|toon)|king(dom|kong|ton|tone|tong))\\b)|(\\bkkitonem\\b)"
+  replacement: "Kintone"
+
+- name: Microsoft
+  pattern: "(?i)(\\bmicrosoft\\b)"
+  replacement: "Microsoft"
+
+- name: Google
+  pattern: "(?i)(\\bgoogle\\b)"
+  replacement: "Google"
+
+- name: Slack
+  pattern: "(?i)(slack)"
+  replacement: "Slack"
+
+# Common Abbreviations
+- name: Roi
+  pattern: "\\bRoi\\b"
+  replacement: "ROI"
+
+# English
+- name: I
+  pattern: "(?i)\\b(i|i')\\b"
+  replacement: "I"
+
+# Filler Words
+- name: Remove um
+  pattern: "(?i)\\b(um|um um|uh|uh\\n)\\b"
+  replacement: ""
+
+# IT Related
+- name: head of IT
+  pattern: "head of it "
+  replacement: "head of IT "
+
+- name: IT manager
+  pattern: "\\bit\\bmanager"
+  replacement: " IT manager"
+
+- name: IT tech
+  pattern: "\\sit tech"
+  replacement: " IT tech"
+
+- name: IT department
+  pattern: "\\bit\\bdepartment"
+  replacement: "IT department"
+
+- name: IT support
+  pattern: "\\bit\\bsupport"
+  replacement: "IT support"
+
+- name: IT setup
+  pattern: "\\bit\\bsetup"
+  replacement: "IT setup"
+
+- name: IT infrastructure
+  pattern: "\\bit\\binfrastructure"
+  replacement: "IT infrastructure"
+
+- name: IT strategy
+  pattern: "\\bit\\bstrategy"
+  replacement: "IT strategy"
+
+- name: IT services
+  pattern: "\\bit\\bservices"
+  replacement: "IT services"
+
+- name: IT security
+  pattern: "\\bit\\bsecurity"
+  replacement: "IT security"
+
+- name: IT solutions
+  pattern: "\\bit\\bsolutions"
+  replacement: "IT solutions"
+
+- name: IT consultant
+  pattern: "\\bit\\bconsultant"
+  replacement: "IT consultant"
+
+- name: IT project
+  pattern: "\\bit\\bproject"
+  replacement: "IT project"
+
+- name: IT team
+  pattern: "\\bit\\bteam"
+  replacement: "\\bit\\bteam"
+
+- name: IT operations
+  pattern: "\\bit\\boperations"
+  replacement: "IT operations"
+
+- name: IT budget
+  pattern: "\\bit\\bbudget"
+  replacement: "IT budget"
+
+- name: IT system
+  pattern: "\\bit\\bsystem"
+  replacement: "IT system"
+
+- name: IT training
+  pattern: "\\bit\\btraining"
+  replacement: "IT training"
+
+- name: IT policies
+  pattern: "\\bit\\bpolicies"
+  replacement: "IT policies"
+
+- name: IT governance
+  pattern: "\\bit\\bgovernance"
+  replacement: "IT governance"
+
+- name: IT network
+  pattern: "\\bit\\bnetwork"
+  replacement: "IT network"
+
+- name: IT framework
+  pattern: "\\bit\\bframework"
+  replacement: "IT framework"
+
+- name: IT resources
+  pattern: "\\bit\\bresources"
+  replacement: "IT resources"
+
+- name: IT planning
+  pattern: "\\bit\\bplanning"
+  replacement: "IT planning"
+
+- name: IT innovation
+  pattern: "\\bit\\binnovation"
+  replacement: "IT innovation"
+
+- name: IT architecture
+  pattern: "\\bit\\barchitecture"
+  replacement: "IT architecture"
+
+- name: IT admin
+  pattern: "\\bit\\badmin"
+  replacement: "IT admin"
+
+- name: IT compliance
+  pattern: "\\bit\\bcompliance"
+  replacement: "IT compliance"
+
+- name: IT assessment
+  pattern: "\\bit\\bassessment"
+  replacement: "IT assessment"
+
+- name: IT integration
+  pattern: "\\bit\\bintegration"
+  replacement: "IT integration"
+
+- name: IT upgrade
+  pattern: "\\bit\\bupgrade"
+  replacement: "IT upgrade"
+
+- name: IT management
+  pattern: "\\bit\\bmanagement"
+  replacement: "IT management"
+
+- name: IT implementation
+  pattern: "\\bit\\bimplementation"
+  replacement: "IT implementation"
+
+- name: IT automation
+  pattern: "\\bit\\bautomation"
+  replacement: "IT automation"
+
+- name: IT development
+  pattern: "\\bit\\bdevelopment"
+  replacement: "IT development"
+
+- name: IT expertise
+  pattern: "\\bit\\bexpertise"
+  replacement: "IT expertise"
+
+- name: IT consulting
+  pattern: "\\bit\\bconsulting"
+  replacement: "IT consulting"
+
+- name: IT monitoring
+  pattern: "\\bit\\bmonitoring"
+  replacement: "IT monitoring"
+
+- name: IT standard
+  pattern: "\\bit\\bstandard"
+  replacement: "IT standard"
+
+- name: IT investment
+  pattern: "\\bit\\binvestment"
+  replacement: "IT investment"
+
+- name: IT deployment
+  pattern: "\\bit\\bdeployment"
+  replacement: "IT deployment"
+
+- name: IT performance
+  pattern: "\\bit\\bperformance"
+  replacement: "IT performance"
+
+- name: IT industry
+  pattern: "\\bit\\bindustry"
+  replacement: "IT industry"
+
+- name: IT outsourcing
+  pattern: "\\bit\\boutsourcing"
+  replacement: "IT outsourcing"
+
+- name: IT evaluation
+  pattern: "\\bit\\bevaluation"
+  replacement: "IT evaluation"
+
+- name: IT maintenance
+  pattern: "\\bit\\bmaintenance"
+  replacement: "IT maintenance"
+
+- name: IT audit
+  pattern: "\\bit\\baudit"
+  replacement: "IT audit"
+
+- name: IT risk
+  pattern: "\\bit\\brisk"
+  replacement: "IT risk"
+
+- name: IT policy
+  pattern: "\\bit\\bpolicy"
+  replacement: "IT policy"
+
+- name: IT consulting services
+  pattern: "\\bit\\bconsulting\\bservices"
+  replacement: "IT consulting services"
+
+- name: IT environment
+  pattern: "\\bit\\benvironment"
+  replacement: "IT environment"
+
+- name: IT infrastructure management
+  pattern: "\\bit\\binfrastructure\\bmanagement"
+  replacement: "IT infrastructure management"
+
+- name: IT service management
+  pattern: "\\bit\\bservice\\bmanagement"
+  replacement: "IT service management"
+
+- name: IT program
+  pattern: "\\bit\\bprogram"
+  replacement: "IT program"
+
+- name: IT leadership
+  pattern: "\\bit\\bleadership"
+  replacement: "IT leadership"
+
+- name: IT director
+  pattern: "\\bit\\bdirector"
+  replacement: "IT director"
+
+- name: IT analyst
+  pattern: "\\bit\\banalyst"
+  replacement: "IT analyst"
+
+- name: IT coordinator
+  pattern: "\\bit\\bcoordinator"
+  replacement: "IT coordinator"
+
+- name: IT engagement
+  pattern: "\\bit\\bengagement"
+  replacement: "IT engagement"
+
+- name: IT support services
+  pattern: "\\bit\\bsupport\\bservices"
+  replacement: "IT support services"
+
+- name: IT disaster recovery
+  pattern: "\\bit\\bdisaster\\brecovery"
+  replacement: "IT disaster recovery"
+
+- name: IT workforce
+  pattern: "\\bit\\bworkforce"
+  replacement: "IT workforce"
+
+- name: IT continuity
+  pattern: "\\bit\\bcontinuity"
+  replacement: "IT continuity"
+
+- name: IT productivity
+  pattern: "\\bit\\bproductivity"
+  replacement: "IT productivity"
+
+- name: IT ethics
+  pattern: "\\bit\\bethics"
+  replacement: "IT ethics"
+
+- name: IT communication
+  pattern: "\\bit\\bcommunication"
+  replacement: "IT communication"
+
+- name: IT health
+  pattern: "\\bit\\bhealth"
+  replacement: "IT health"
+
+- name: IT procurement
+  pattern: "\\bit\\bprocurement"
+  replacement: "IT procurement"
+
+- name: IT analytics
+  pattern: "\\bit\\banalytics"
+  replacement: "IT analytics"
+
+- name: IT project
+  pattern: "\\bit\\bproject\\blifecycle"
+  replacement: "IT project"
+
+# False Positive IT (pronoun) correction
+- name: It's
+  pattern: ".\\bIT's\\b"
+  replacement: ". It's"
+- name: It's
+  pattern: ":\\bIT's\\b"
+  replacement: ": It's"
