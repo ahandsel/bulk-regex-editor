@@ -21,7 +21,7 @@
 
 # Common Abbreviations
 - name: Roi
-  pattern: "\\bRoi\\b"
+  pattern: "(?i)(\\broi\\b)"
   replacement: "ROI"
 
 # English
