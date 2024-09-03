@@ -84,7 +84,7 @@ def log_start(log_file, arguments):
 
     :param arguments: The arguments used for the script run.
     """
-    with open(log_file, "a") as log:
+    with open(log_file, "a", encoding="utf-8") as log:
         log.write(
             f"\n---\n# {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Arguments: {' '.join(arguments)}\n---\n"
         )
@@ -96,7 +96,7 @@ def log_end(log_file):
 
     :param log_file: The path to the log file.
     """
-    with open(log_file, "a") as log:
+    with open(log_file, "a", encoding="utf-8") as log:
         log.write(f"---\n")
     terminal_output(f"Log file updated: {os.path.relpath(log_file)}")
 
@@ -113,7 +113,7 @@ def log_changes(log_file, file_path, changes):
     """
     home = str(Path.home())
     short_path = str(file_path).replace(home, "~")
-    with open(log_file, "a") as log:
+    with open(log_file, "a", encoding="utf-8") as log:
         log.write(f"* {short_path}\n")
         for line, original, replacement in changes:
             log.write(f'  * Line {line}: "{original}" -> "{replacement}"\n')
@@ -140,7 +140,7 @@ def load_regex_patterns(file_path):
         sys.exit(1)
 
     try:
-        with open(file_path, "r") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             patterns = yaml.safe_load(file)
             for pattern in patterns:
                 if not all(
@@ -166,10 +166,10 @@ def edit_file(file_path, regex_patterns):
     """
     changes = []
     try:
-        with open(file_path, "r") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             lines = file.readlines()
 
-        with open(file_path, "w") as file:
+        with open(file_path, "w", encoding="utf-8") as file:
             for i, line in enumerate(lines, 1):
                 original_line = line
                 for pattern in regex_patterns:
@@ -293,7 +293,7 @@ def create_example_regex_pattern_file():
   pattern: "(?i)\\\\bexample\\\\b"
   replacement: "EXAMPLE"
 """
-    with open(file_path, "w") as file:
+    with open(file_path, "w", encoding="utf-8") as file:
         file.write(yaml_content)
     terminal_output(
         f"Example regex patterns YAML file generated at: {os.path.relpath(file_path)}"
