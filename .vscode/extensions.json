@@ -7,6 +7,7 @@
     "streetsidesoftware.code-spell-checker",
     "tyriar.sort-lines",
     "wengerk.highlight-bad-chars",
-    "yzhang.markdown-all-in-one"
+    "yzhang.markdown-all-in-one",
+    "ms-python.pylint"
   ]
 }
