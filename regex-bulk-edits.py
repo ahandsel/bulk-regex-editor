@@ -2,20 +2,21 @@
 """
 Script Name: regex-bulk-edits.py
 Usage: python3 regex-bulk-edits.py [-h] [-rgx REGEX] [file_or_directory_path] [-t file_type] [-e]
-Purpose: This script performs bulk regex-based edits on specified text files or all text files in a directory.
+Purpose: Performs bulk regex-based edits on specified text files or all text files in a directory.
 Versions:
-+ 1.1.1 - Fix example regex pattern YAML file generation; changed regex patterns file to not be hidden
++ 1.2.0 - Fixing py
++ 1.1.1 - Fix example YAML file generator; changed regex patterns file to not be hidden
 + 1.0.0 - Initial version; replacement function working
 """
 
+import argparse
 import os
 import re
-import sys
-import yaml
-import argparse
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
+import yaml
 
 # Default configurations
 DEFAULT_REGEX_FILE = "regex_patterns.yaml"
@@ -97,7 +98,7 @@ def log_end(log_file):
     :param log_file: The path to the log file.
     """
     with open(log_file, "a", encoding="utf-8") as log:
-        log.write(f"---\n")
+        log.write("---\n")
     terminal_output(f"Log file updated: {os.path.relpath(log_file)}")
 
 
