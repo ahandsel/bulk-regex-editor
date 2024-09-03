@@ -16,7 +16,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-import yaml
+import yaml # pylint: disable=import-error
 
 # Default configurations
 DEFAULT_REGEX_FILE = "regex_patterns.yaml"
