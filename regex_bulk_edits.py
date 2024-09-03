@@ -181,7 +181,7 @@ def edit_file(file_path, regex_patterns):
 
         if changes:
             log_changes(DEFAULT_LOG_FILE, file_path, changes)
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         terminal_output(f"Error editing file '{file_path}': {e}")
 
 
