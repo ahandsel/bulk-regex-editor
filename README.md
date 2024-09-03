@@ -1,5 +1,7 @@
 # Bulk Regex Editor
 
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
+
 This script allows you to apply multiple regex patterns to a text file or all text files in a directory.
 
 Why? Great for transcription editing or data cleaning that have similar patterns.
