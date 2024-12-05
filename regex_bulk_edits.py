@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Script Name: regex-bulk-edits.py
-Usage: python3 regex-bulk-edits.py [-h] [-rgx REGEX] [file_or_directory_path] [-t file_type] [-e]
+Script Name: regex_bulk_edits.py
+Usage: python3 regex_bulk_edits.py [-h] [-rgx REGEX] [file_or_directory_path] [-t file_type] [-e]
 Purpose: Performs bulk regex-based edits on specified text files or all text files in a directory.
 Versions:
 + 1.2.0 - Fixing py
@@ -16,7 +16,7 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
-import yaml # pylint: disable=import-error
+import yaml  # pylint: disable=import-error
 
 # Default configurations
 DEFAULT_REGEX_FILE = "regex_patterns.yaml"
@@ -87,7 +87,9 @@ def log_start(log_file, arguments):
     """
     with open(log_file, "a", encoding="utf-8") as log:
         log.write(
-            f"\n---\n# {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Arguments: {' '.join(arguments)}\n---\n"
+            f"\n---\n"
+            f"# {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - Arguments: {' '.join(arguments)}\n"
+            f"---\n"
         )
 
 
@@ -128,7 +130,7 @@ def load_regex_patterns(file_path):
 
     :return: A list of regex patterns.
     """
-    e_flag_message = "Generate an example regex pattern YAML file by using the -e flag:\n  python3 regex-bulk-edits.py -e"
+    e_flag_message = "Generate an example regex pattern YAML file by using the -e flag:\n  python3 regex_bulk_edits.py -e"
     if not Path(file_path).exists():
         terminal_output(
             f"Error: The regex patterns file '{file_path}' does not exist.\n{e_flag_message}"

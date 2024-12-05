@@ -23,7 +23,7 @@ Create a YAML file with the regex patterns you want to apply. The script will ap
 1. Generate an example `regex_patterns.yaml` file by running the script with the `-e` option:
 
     ```bash
-    python3 script/regex-bulk-edits.py -e
+    python3 script/regex_bulk_edits.py
     ```
 
 ## How to Add RegEx Patterns?
@@ -45,12 +45,12 @@ Example:
 1. Run the following command:
 
     ```bash
-    python3 script/regex-bulk-edits.py
+    python3 script/regex_bulk_edits.py
     ```
 
 ### Options
 
-usage: `regex-bulk-edits.py [-h] [-rgx REGEX] [-t TYPE] [-e] [path]`
+usage: `regex_bulk_edits.py [-h] [-rgx REGEX] [-t TYPE] [-e] [path]`
 
 * path: Path to a text file or directory
 * `-rgx`, `--regex`: Path to the regex patterns YAML file
