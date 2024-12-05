@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
 """
-Script Name: regex_bulk_edits.py
-Usage: python3 regex_bulk_edits.py [-h] [-rgx REGEX] [file_or_directory_path] [-t file_type] [-e]
-Purpose: Performs bulk regex-based edits on specified text files or all text files in a directory.
+Name:     regex_bulk_edits.py
+Purpose:  Performs bulk regex-based edits on specified text files or all text files in a directory.
+Usage:    python3 regex_bulk_edits.py [-h] [-rgx REGEX] [file_or_directory_path] [-t file_type] [--example]
+Arguments:
+    -h,           --help            Show this help message and exit.
+    -rgx REGEX,   --regex REGEX     Path to the regex patterns YAML file.
+    file_or_directory_path          Path to a text file or directory. Defaults to the current directory.
+    -t file_type, --type file_type  File type to filter (e.g., .txt). Defaults to .txt and .md.
+    --example                       Generate an example regex pattern YAML file.
+Notes:    Ensure the regex patterns in the YAML file have properly escaped backslashes.
 Versions:
++ 1.3.0 - Added support for capturing groups and backreferences in replacement text
 + 1.2.0 - Fixing py
 + 1.1.1 - Fix example YAML file generator; changed regex patterns file to not be hidden
 + 1.0.0 - Initial version; replacement function working
@@ -12,11 +20,11 @@ Versions:
 import argparse
 import os
 import re
-import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 import yaml  # pylint: disable=import-error
+
 
 # Default configurations
 DEFAULT_REGEX_FILE = "regex_patterns.yaml"
@@ -82,7 +90,6 @@ def log_start(log_file, arguments):
     Starts a logging session.
 
     :param log_file: The path to the log file.
-
     :param arguments: The arguments used for the script run.
     """
     with open(log_file, "a", encoding="utf-8") as log:
@@ -109,9 +116,7 @@ def log_changes(log_file, file_path, changes):
     Logs changes made to a file.
 
     :param log_file: The path to the log file.
-
     :param file_path: The path to the file that was edited.
-
     :param changes: A list of changes made to the file.
     """
     home = str(Path.home())
@@ -122,15 +127,29 @@ def log_changes(log_file, file_path, changes):
             log.write(f'  * Line {line}: "{original}" -> "{replacement}"\n')
 
 
+def process_replacement_string(replacement):
+    """
+    Processes the replacement string to convert $1 syntax to \g<1> syntax.
+
+    :param replacement: The replacement string to process.
+
+    :return: The processed replacement string.
+    """
+    return re.sub(r"\$(\d+)", lambda m: r"\g<{}>".format(m.group(1)), replacement)
+
+
 def load_regex_patterns(file_path):
     """
-    Loads regex patterns from a YAML file.
+    Loads and compiles regex patterns from a YAML file.
 
     :param file_path: The path to the YAML file containing regex patterns.
 
-    :return: A list of regex patterns.
+    :return: A list of regex patterns with compiled patterns.
     """
-    e_flag_message = "Generate an example regex pattern YAML file by using the -e flag:\n  python3 regex_bulk_edits.py -e"
+    e_flag_message = (
+        "Generate an example regex pattern YAML file by using the --example flag:\n"
+        "  python3 regex_bulk_edits.py --example"
+    )
     if not Path(file_path).exists():
         terminal_output(
             f"Error: The regex patterns file '{file_path}' does not exist.\n{e_flag_message}"
@@ -153,6 +172,14 @@ def load_regex_patterns(file_path):
                         "Error: Missing required keys ('name', 'pattern', 'replacement') in regex patterns file."
                     )
                     sys.exit(1)
+                try:
+                    pattern["compiled_pattern"] = re.compile(pattern["pattern"])
+                    pattern["processed_replacement"] = process_replacement_string(
+                        pattern["replacement"]
+                    )
+                except re.error as e:
+                    terminal_output(f"Error compiling pattern '{pattern['name']}': {e}")
+                    sys.exit(1)
             return patterns
     except yaml.YAMLError as exc:
         terminal_output(f"Error parsing YAML file: {exc}")
@@ -164,7 +191,6 @@ def edit_file(file_path, regex_patterns):
     Edits a file based on the given regex patterns.
 
     :param file_path: The path to the file to edit.
-
     :param regex_patterns: A list of regex patterns.
     """
     changes = []
@@ -176,7 +202,9 @@ def edit_file(file_path, regex_patterns):
             for i, line in enumerate(lines, 1):
                 original_line = line
                 for pattern in regex_patterns:
-                    line = re.sub(pattern["pattern"], pattern["replacement"], line)
+                    line = pattern["compiled_pattern"].sub(
+                        pattern["processed_replacement"], line
+                    )
                 if original_line != line:
                     changes.append((i, original_line.strip(), line.strip()))
                 file.write(line)
@@ -187,16 +215,15 @@ def edit_file(file_path, regex_patterns):
         terminal_output(f"Error editing file '{file_path}': {e}")
 
 
-def find_files(path, file_types):
+def find_files(path, file_types, regex_patterns):
     """
     Finds files in a directory that match the specified file types.
 
     :param path: The path to search (file or directory).
-
     :param file_types: The file types to filter.
+    :param regex_patterns: The compiled regex patterns.
     """
     path = Path(path)
-    regex_patterns = load_regex_patterns(DEFAULT_REGEX_FILE)
     if path.is_file():
         edit_file(path, regex_patterns)
     elif path.is_dir():
@@ -232,10 +259,13 @@ def parse_arguments():
         default=".",
     )
     parser.add_argument(
-        "-t", "--type", type=str, help="File type to filter (e.g., .txt)", default=None
+        "-t",
+        "--type",
+        type=str,
+        help="File type to filter (e.g., .txt)",
+        default=None,
     )
     parser.add_argument(
-        "-e",
         "--example",
         action="store_true",
         help="Generate an example regex pattern YAML file",
@@ -263,7 +293,15 @@ def file_type_validator(file_type):
 
     :param file_type: The file type to validate.
     """
-    valid_file_types = [".txt", ".md", ".rtf", ".html", ".json", ".csv", ".tsv"]
+    valid_file_types = [
+        ".txt",
+        ".md",
+        ".rtf",
+        ".html",
+        ".json",
+        ".csv",
+        ".tsv",
+    ]
     file_type = file_type if file_type.startswith(".") else f".{file_type}"
     if file_type not in valid_file_types:
         terminal_output(
@@ -308,20 +346,19 @@ def main():
     """
     Main function to execute the script.
     """
-    if not install_libraries():
-        print("Failed to install libraries. Exiting the script.")
-        sys.exit(1)
-
     args = parse_arguments()
     validate_arguments(args)
-
-    log_start(DEFAULT_LOG_FILE, sys.argv)
 
     if args.example:
         create_example_regex_pattern_file()
         sys.exit(0)
 
-    find_files(args.path, [args.type] if args.type else DEFAULT_FILE_TYPES)
+    regex_patterns = load_regex_patterns(args.regex)
+    log_start(DEFAULT_LOG_FILE, sys.argv)
+
+    find_files(
+        args.path, [args.type] if args.type else DEFAULT_FILE_TYPES, regex_patterns
+    )
 
     log_end(DEFAULT_LOG_FILE)
 
