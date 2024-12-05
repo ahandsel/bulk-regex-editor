@@ -316,12 +316,13 @@
   replacement: "IT project"
 
 # False Positive IT (pronoun) correction
-- name: It's
-  pattern: ".\\bIT's\\b"
-  replacement: ". It's"
-- name: It's
-  pattern: ":\\bIT's\\b"
-  replacement: ": It's"
+- name: Normalize ", it's" with correct casing and apostrophe
+  pattern: "(?i)(,)(\\s*)\\b(?:IT['’]s|it's)\\b"
+  replacement: "$1$2it's"
+
+- name: Capitalize "It's" after period or colon
+  pattern: "(?i)([\\.:])(\\s*)\\b(?:it's)\\b"
+  replacement: "$1$2It's"
 
 # Punctuation Formatting
 
