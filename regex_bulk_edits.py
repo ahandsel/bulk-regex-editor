@@ -13,6 +13,7 @@ Notes:
   + Ensure the regex patterns in the YAML file have properly escaped backslashes.
   + Added support for $SENT_CASE() function in replacement strings.
 Versions:
+  + 1.4.1 - Fix "consider-using-f-string" pylint error
   + 1.4.0 - Added support for $SENT_CASE() function in replacement strings
   + 1.3.1 - Added support for capturing groups and backreferences in replacement text
   + 1.2.1 - Improvements to handling of regex patterns file
@@ -24,6 +25,7 @@ Versions:
 import argparse
 import os
 import re
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -60,7 +62,6 @@ def install_libraries():
     )
     if user_input == "y":
         try:
-            import subprocess
 
             subprocess.check_call(
                 [sys.executable, "-m", "pip", "install", *missing_libraries]
@@ -134,13 +135,28 @@ def log_changes(log_file, file_path, changes):
 
 def process_replacement_string(replacement):
     """
-    Processes the replacement string to convert $1 syntax to \g<1> syntax.
+    Processes the replacement string to convert `$1` syntax to `\\g<1>` syntax.
 
-    :param replacement: The replacement string to process.
+    Example:
+        Input: "Replace $1 with this"
+        Output: "Replace \\g<1> with this"
 
-    :return: The processed replacement string.
+    :param replacement: (str) The replacement string to process.
+    :raises ValueError: If the input is not a string.
+    :return: (str) The processed replacement string.
     """
-    return re.sub(r"\$(\d+)", lambda m: r"\g<{}>".format(m.group(1)), replacement)
+    if not isinstance(replacement, str):
+        raise ValueError("Input replacement must be a string.")
+
+    try:
+        processed_string = re.sub(
+            r"\$(\d+)", lambda m: rf"\g<{m.group(1)}>", replacement
+        )
+        return processed_string
+    except Exception as e:
+        raise RuntimeError(
+            f"An error occurred while processing the string: {e}"
+        ) from e  # pylint: disable=broad-exception-caught
 
 
 def sentence_case_converter(s):
@@ -321,10 +337,12 @@ def find_files(path, file_types, regex_patterns):
     path = Path(path)
     if path.is_file():
         edit_file(path, regex_patterns)
+        edit_file(path, regex_patterns)
     elif path.is_dir():
         for file_path in path.rglob("*"):
             if file_path.suffix in file_types:
                 edit_file(file_path, regex_patterns)
+                edit_file(path, regex_patterns)
     else:
         terminal_output(f"Error: '{path}' is not a valid file or directory.")
         sys.exit(1)
