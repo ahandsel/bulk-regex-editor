@@ -9,12 +9,16 @@ Arguments:
     file_or_directory_path          Path to a text file or directory. Defaults to the current directory.
     -t file_type, --type file_type  File type to filter (e.g., .txt). Defaults to .txt and .md.
     --example                       Generate an example regex pattern YAML file.
-Notes:    Ensure the regex patterns in the YAML file have properly escaped backslashes.
+Notes:
+  + Ensure the regex patterns in the YAML file have properly escaped backslashes.
+  + Added support for $SENT_CASE() function in replacement strings.
 Versions:
-+ 1.3.1 - Added support for capturing groups and backreferences in replacement text
-+ 1.2.0 - Fixing py
-+ 1.1.1 - Fix example YAML file generator; changed regex patterns file to not be hidden
-+ 1.0.0 - Initial version; replacement function working
+  + 1.4.0 - Added support for $SENT_CASE() function in replacement strings
+  + 1.3.1 - Added support for capturing groups and backreferences in replacement text
+  + 1.2.1 - Improvements to handling of regex patterns file
+  + 1.2.0 - Fixing py
+  + 1.1.1 - Fix example YAML file generator; changed regex patterns file to not be hidden
+  + 1.0.0 - Initial version; replacement function working
 """
 
 import argparse
@@ -37,7 +41,7 @@ def install_libraries():
 
     :return: True if all required libraries are installed, otherwise False.
     """
-    required_libraries = ["yaml", "argparse"]
+    required_libraries = ["yaml"]
     missing_libraries = [
         lib for lib in required_libraries if not is_library_installed(lib)
     ]
@@ -66,7 +70,7 @@ def install_libraries():
         except subprocess.CalledProcessError:
             print("\nFailed to install the required libraries.")
     else:
-        print("\nPlease install the required libraries to run the function.")
+        print("\nPlease install the required libraries to run the script.")
         print(f"Install manually by running: pip install {' '.join(missing_libraries)}")
     return False
 
@@ -139,6 +143,84 @@ def process_replacement_string(replacement):
     return re.sub(r"\$(\d+)", lambda m: r"\g<{}>".format(m.group(1)), replacement)
 
 
+def sentence_case_converter(s):
+    """
+    Converts a string to sentence case.
+
+    :param s: The input string.
+
+    :return: The string converted to sentence case.
+    """
+    if not s:
+        return ""
+    return s[0].upper() + s[1:].lower()
+
+
+def create_replacement_function(replacement_string):
+    """
+    Creates a replacement function for re.sub, handling $SENT_CASE() in the replacement string.
+
+    :param replacement_string: The replacement string containing $SENT_CASE()
+
+    :return: A function that can be used as the replacement in re.sub
+    """
+    # Tokenize the replacement string
+    token_pattern = re.compile(r"(\$SENT_CASE\((.*?)\))|(\$\d+)|([^$]+)|(\$)")
+
+    tokens = []
+    pos = 0
+    while pos < len(replacement_string):
+        match = token_pattern.match(replacement_string, pos)
+        if not match:
+            break
+        if match.group(1):  # $SENT_CASE(some_content)
+            content = match.group(2)  # the content inside the parentheses
+            tokens.append(("SENT_CASE", content))
+        elif match.group(3):  # $n
+            tokens.append(("GROUP", int(match.group(3)[1:])))
+        elif match.group(4):  # Text
+            tokens.append(("TEXT", match.group(4)))
+        elif match.group(5):  # Single $
+            tokens.append(("TEXT", "$"))
+        pos = match.end()
+
+    def replacement_function(match):
+        # Build the replacement string
+        result = ""
+        for token in tokens:
+            if token[0] == "TEXT":
+                result += token[1]
+            elif token[0] == "GROUP":
+                group_num = token[1]
+                group_text = match.group(group_num)
+                result += group_text if group_text is not None else ""
+            elif token[0] == "SENT_CASE":
+                content = token[1]
+                # Process the content, which may contain $n references
+                content_result = ""
+                content_pos = 0
+                while content_pos < len(content):
+                    content_match = re.match(
+                        r"(\$\d+)|([^\$]+)|(\$)", content[content_pos:]
+                    )
+                    if not content_match:
+                        break
+                    if content_match.group(1):  # $n
+                        group_num = int(content_match.group(1)[1:])
+                        group_text = match.group(group_num)
+                        content_result += group_text if group_text is not None else ""
+                    elif content_match.group(2):  # Text
+                        content_result += content_match.group(2)
+                    elif content_match.group(3):  # Single $
+                        content_result += "$"
+                    content_pos += content_match.end()
+                # Apply sentence case to content_result
+                result += sentence_case_converter(content_result)
+        return result
+
+    return replacement_function
+
+
 def load_regex_patterns(file_path):
     """
     Loads and compiles regex patterns from a YAML file.
@@ -175,9 +257,16 @@ def load_regex_patterns(file_path):
                     sys.exit(1)
                 try:
                     pattern["compiled_pattern"] = re.compile(pattern["pattern"])
-                    pattern["processed_replacement"] = process_replacement_string(
-                        pattern["replacement"]
-                    )
+                    if "$SENT_CASE(" in pattern["replacement"]:
+                        pattern["use_function"] = True
+                        pattern["replacement_function"] = create_replacement_function(
+                            pattern["replacement"]
+                        )
+                    else:
+                        pattern["use_function"] = False
+                        pattern["processed_replacement"] = process_replacement_string(
+                            pattern["replacement"]
+                        )
                 except re.error as e:
                     terminal_output(f"Error compiling pattern '{pattern['name']}': {e}")
                     sys.exit(1)
@@ -203,9 +292,14 @@ def edit_file(file_path, regex_patterns):
             for i, line in enumerate(lines, 1):
                 original_line = line
                 for pattern in regex_patterns:
-                    line = pattern["compiled_pattern"].sub(
-                        pattern["processed_replacement"], line
-                    )
+                    if pattern.get("use_function", False):
+                        line = pattern["compiled_pattern"].sub(
+                            pattern["replacement_function"], line
+                        )
+                    else:
+                        line = pattern["compiled_pattern"].sub(
+                            pattern["processed_replacement"], line
+                        )
                 if original_line != line:
                     changes.append((i, original_line.strip(), line.strip()))
                 file.write(line)

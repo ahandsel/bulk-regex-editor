@@ -1,5 +1,20 @@
 # Regex Patterns Configuration File
 # Use `\\` to escape
+# Use $SENT_CASE() to convert the string to sentence case.
+
+# Punctuation Formatting
+
+- name: Replace curly double quotes with straight versions
+  pattern: "[“”]"
+  replacement: '"'
+
+- name: Replace curly single quotes with straight versions
+  pattern: "[‘’]"
+  replacement: "'"
+
+- name: Remove comma and space after period and newline
+  pattern: "^,\\s(\\w)"
+  replacement: "$SENT_CASE($1)"
 
 # Company Names
 
@@ -7,17 +22,9 @@
   pattern: "(?i)(\\bkim\\s{0,1}(jong|chon|ta)\\b)|(\\bcantone?\\b)|(\\bken(jon|to|ton|tone)\\b)|(\\b[as]?kintonen?\\b)|(\\bking? (tone|kong)\\b)|(\\b(k?kin(dle|etone|tem|ter|to|tome|ton|toon)|king(dom|kong|ton|tone|tong))\\b)|(\\bkkitonem\\b)"
   replacement: "Kintone"
 
-- name: Microsoft
-  pattern: "(?i)(\\bmicrosoft\\b)"
-  replacement: "Microsoft"
-
-- name: Google
-  pattern: "(?i)(\\bgoogle\\b)"
-  replacement: "Google"
-
-- name: Slack
-  pattern: "(?i)(slack)"
-  replacement: "Slack"
+- name: Capitalize company names
+  pattern: "(?i)((microsoft)|(google)|(slack))"
+  replacement: "$SENT_CASE($1)"
 
 # Common Abbreviations
 - name: Roi
@@ -31,7 +38,7 @@
 
 # Filler Words
 - name: Remove um
-  pattern: "(?i)\\b(um|um um|uh|uh\\n)\\b"
+  pattern: "(?i)\\b(um,\\s|um um,\\s|uh,\\s|uh,\\n)|(um|um um|uh|uh\\n)\\b"
   replacement: ""
 
 # IT Related
@@ -323,13 +330,3 @@
 - name: Capitalize "It's" after period or colon
   pattern: "(?i)([\\.:])(\\s*)\\b(?:it's)\\b"
   replacement: "$1$2It's"
-
-# Punctuation Formatting
-
-- name: Replace curly double quotes with straight versions
-  pattern: "[“”]"
-  replacement: '"'
-
-- name: Replace curly single quotes with straight versions
-  pattern: "[‘’]"
-  replacement: "'"
