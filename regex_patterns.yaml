@@ -1,6 +1,16 @@
 # Regex Patterns Configuration File
 # Use `\\` to escape
 
+# Punctuation Formatting
+
+- name: Replace curly double quotes with straight versions
+  pattern: "[“”]"
+  replacement: '"'
+
+- name: Replace curly single quotes with straight versions
+  pattern: "[‘’]"
+  replacement: "'"
+
 # Company Names
 
 - name: Kintone
