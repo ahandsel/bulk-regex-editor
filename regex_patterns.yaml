@@ -16,6 +16,12 @@
   pattern: "^,\\s(\\w)"
   replacement: "$SENT_CASE($1)"
 
+# Sentence Case
+- name: Use sentence case for all lines
+  pattern: "^(\\w)"
+  replacement: "$SENT_CASE($1)"
+
+
 # Company Names
 
 - name: Kintone
