@@ -11,7 +11,7 @@ Arguments:
     --example                       Generate an example regex pattern YAML file.
 Notes:    Ensure the regex patterns in the YAML file have properly escaped backslashes.
 Versions:
-+ 1.3.0 - Added support for capturing groups and backreferences in replacement text
++ 1.3.1 - Added support for capturing groups and backreferences in replacement text
 + 1.2.0 - Fixing py
 + 1.1.1 - Fix example YAML file generator; changed regex patterns file to not be hidden
 + 1.0.0 - Initial version; replacement function working
@@ -24,7 +24,6 @@ import sys
 from datetime import datetime
 from pathlib import Path
 import yaml  # pylint: disable=import-error
-
 
 # Default configurations
 DEFAULT_REGEX_FILE = "regex_patterns.yaml"
@@ -57,6 +56,8 @@ def install_libraries():
     )
     if user_input == "y":
         try:
+            import subprocess
+
             subprocess.check_call(
                 [sys.executable, "-m", "pip", "install", *missing_libraries]
             )
@@ -346,6 +347,9 @@ def main():
     """
     Main function to execute the script.
     """
+    if not install_libraries():
+        sys.exit(1)
+
     args = parse_arguments()
     validate_arguments(args)
 
