@@ -16,4 +16,7 @@
   "workbench.tree.renderIndentGuides": "always",
   "editor.indentSize": "tabSize",
   "editor.detectIndentation": false,
+  "cSpell.words": [
+    "pylint"
+  ],
 }
