@@ -85,3 +85,12 @@ Create a regex pattern to match the following words:
 
 I want to replace the matched words with "example".
 ````
+
+## Dev notes
+
+### Features to add
+* Ignores .gitignore files from the bulk edit
+* Add a feature so a character picked up by a regex pattern can be kept in the replacement text
+  * Example: IT\s\w+ -> IT \w
+* Make it into a Mac App
+  * <https://medium.com/@jackhuang.wz/in-just-two-steps-you-can-turn-a-python-script-into-a-macos-application-installer-6e21bce2ee71>
