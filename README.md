@@ -8,6 +8,14 @@ Why? Great for transcription editing or data cleaning that have similar patterns
 
 Create a YAML file with the regex patterns you want to apply. The script will apply the patterns to the text files and save the changes.
 
+## Table of contents <!-- omit in toc -->
+* [Setup](#setup)
+* [How to Add regex patterns?](#how-to-add-regex-patterns)
+* [Usage - How to run the script?](#usage---how-to-run-the-script)
+  * [Options](#options)
+* [Prompt template to generate a regex pattern](#prompt-template-to-generate-a-regex-pattern)
+* [Dev notes](#dev-notes)
+  * [Features to add](#features-to-add)
 ## Setup
 
 1. Install Python 3 (method of your choice):
@@ -26,7 +34,7 @@ Create a YAML file with the regex patterns you want to apply. The script will ap
     python3 script/regex_bulk_edits.py
     ```
 
-## How to Add RegEx Patterns?
+## How to Add regex patterns?
 
 1. Open the `regex_patterns.yaml` file.
 2. Add regex patterns and replacement text into the file.
@@ -39,7 +47,7 @@ Example:
   replacement: "Example:"
 ```
 
-## Usage - How to Run the Script?
+## Usage - How to run the script?
 
 1. Open the [terminal](https://support.apple.com/guide/terminal/get-started-pht23b129fed/).
 1. Run the following command:
@@ -59,7 +67,7 @@ usage: `regex_bulk_edits.py [-h] [-rgx REGEX] [-t TYPE] [-e] [path]`
 * `-h`, `--help`: Show this help message and exit
 
 
-## Prompt Template to Generate a Regex Pattern
+## Prompt template to generate a regex pattern
 
 Use this prompt template to generate a regex pattern for the `regex_patterns.yaml` file using ChatGPT.
 
