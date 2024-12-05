@@ -17,6 +17,7 @@
   "editor.indentSize": "tabSize",
   "editor.detectIndentation": false,
   "cSpell.words": [
+    "pyenv",
     "pylint"
   ],
 }
